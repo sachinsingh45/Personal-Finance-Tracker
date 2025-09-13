@@ -1,0 +1,42 @@
+# ====================
+# Backend
+# ====================
+backend/node_modules/
+backend/.env
+backend/dist/
+backend/build/
+backend/coverage/
+backend/logs/
+backend/*.log
+
+# ====================
+# Frontend
+# ====================
+frontend/node_modules/
+frontend/.env
+frontend/.env.local
+frontend/.env.*.local
+frontend/dist/
+frontend/build/
+frontend/coverage/
+frontend/*.log
+
+# ====================
+# Common
+# ====================
+# Logs
+*.log
+logs
+*.pid
+*.pid.lock
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE/editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*.swn
