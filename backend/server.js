@@ -4,8 +4,15 @@ import dotenv from 'dotenv';
 import connectDB from './config/database.js';
 import authRoutes from './routes/auth.js';
 import transactionRoutes from './routes/transactions.js';
+import receiptRoutes from './routes/receipts.js';
 
 dotenv.config();
+
+// Debug environment variables
+console.log('Environment variables loaded:');
+console.log('AZURE_DOC_INTELLIGENCE_ENDPOINT:', process.env.AZURE_DOC_INTELLIGENCE_ENDPOINT ? 'SET' : 'NOT SET');
+console.log('AZURE_DOC_INTELLIGENCE_KEY:', process.env.AZURE_DOC_INTELLIGENCE_KEY ? 'SET' : 'NOT SET');
+
 connectDB();
 
 const app = express();
@@ -17,6 +24,7 @@ app.use(express.json());
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/transactions', transactionRoutes);
+app.use('/api/receipts', receiptRoutes);
 
 // Error handling
 app.use((err, req, res, next) => {

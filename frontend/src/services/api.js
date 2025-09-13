@@ -41,4 +41,18 @@ export const authAPI = {
   getMe: () => api.get('/auth/me')
 };
 
+export const receiptAPI = {
+  upload: (formData) => {
+    const token = localStorage.getItem('token');
+    return fetch('/api/receipts/upload', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${token}`
+      },
+      body: formData
+    });
+  },
+  createTransaction: (data) => api.post('/receipts/create-transaction', data)
+};
+
 export default api;
