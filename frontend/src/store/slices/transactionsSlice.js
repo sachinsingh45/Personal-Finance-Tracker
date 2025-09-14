@@ -1,12 +1,11 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
-
-const API_URL = process.env.NODE_ENV === 'production' ? '/api' : 'http://localhost:5000/api';
+import { BASE_URL } from '../../config/constants.js';
 export const fetchTransactions = createAsyncThunk(
   'transactions/fetchAll',
   async (_, { rejectWithValue }) => {
     try {
-      const response = await axios.get(`${API_URL}/transactions`);
+      const response = await axios.get(`${BASE_URL}/transactions`);
       return response.data;
     } catch (error) {
       const message = error.response?.data?.message || 'Failed to fetch transactions';
@@ -19,7 +18,7 @@ export const createTransaction = createAsyncThunk(
   'transactions/create',
   async (transactionData, { rejectWithValue }) => {
     try {
-      const response = await axios.post(`${API_URL}/transactions`, transactionData);
+      const response = await axios.post(`${BASE_URL}/transactions`, transactionData);
       return response.data;
     } catch (error) {
       const message = error.response?.data?.message || 'Failed to create transaction';
@@ -32,7 +31,7 @@ export const updateTransaction = createAsyncThunk(
   'transactions/update',
   async ({ id, ...transactionData }, { rejectWithValue }) => {
     try {
-      const response = await axios.put(`${API_URL}/transactions/${id}`, transactionData);
+      const response = await axios.put(`${BASE_URL}/transactions/${id}`, transactionData);
       return response.data;
     } catch (error) {
       const message = error.response?.data?.message || 'Failed to update transaction';
@@ -45,7 +44,7 @@ export const deleteTransaction = createAsyncThunk(
   'transactions/delete',
   async (id, { rejectWithValue }) => {
     try {
-      await axios.delete(`${API_URL}/transactions/${id}`);
+      await axios.delete(`${BASE_URL}/transactions/${id}`);
       return id;
     } catch (error) {
       const message = error.response?.data?.message || 'Failed to delete transaction';
