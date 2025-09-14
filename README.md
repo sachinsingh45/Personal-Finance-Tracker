@@ -2,6 +2,13 @@
 
 A modern, full-stack personal finance management application that helps you track income, expenses, and analyze your financial data with AI-powered receipt processing.
 
+
+
+## 📸 Demo Video
+https://youtu.be/dLLQMcg8pb0?si=iF9q6L7OJVN3kaYd
+
+
+
 ## 🌟 Features
 
 ### Core Functionality
