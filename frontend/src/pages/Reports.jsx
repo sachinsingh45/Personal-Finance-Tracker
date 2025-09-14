@@ -195,25 +195,36 @@ const Reports = () => {
   }
 
   const exportToCSV = () => {
-    const csvData = getFilteredTransactions().map(transaction => ({
-      Date: formatDate(transaction.date),
-      Type: transaction.type,
-      Category: transaction.category,
-      Description: transaction.description,
-      Amount: transaction.amount
-    }))
+    const transactions = getFilteredTransactions()
+    if (transactions.length === 0) return toast.error('No transactions to export')
 
-    const csvContent = [
-      Object.keys(csvData[0]).join(','),
-      ...csvData.map(row => Object.values(row).join(','))
-    ].join('\n')
+    const escape = (field) => {
+      const str = String(field || '')
+      return str.includes(',') || str.includes('"') ? `"${str.replace(/"/g, '""')}"` : str
+    }
 
-    const blob = new Blob([csvContent], { type: 'text/csv' })
-    const url = window.URL.createObjectURL(blob)
+    const rows = [
+      ['Date', 'Type', 'Category', 'Description', 'Amount'],
+      ...transactions.map(t => [
+        formatDate(t.date),
+        t.type.charAt(0).toUpperCase() + t.type.slice(1),
+        t.category,
+        t.description || '',
+        `₹${t.amount.toFixed(2)}`
+      ])
+    ]
+
+    const csv = rows.map(row => row.map(escape).join(',')).join('\n')
+    const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv' })
+    const url = URL.createObjectURL(blob)
+    
     const a = document.createElement('a')
     a.href = url
     a.download = `transactions-${getMonthName(selectedMonth.month)}-${selectedMonth.year}.csv`
     a.click()
+    URL.revokeObjectURL(url)
+    
+    toast.success(`Exported ${transactions.length} transactions`)
   }
 
   if (loading) return <LoadingSpinner />
