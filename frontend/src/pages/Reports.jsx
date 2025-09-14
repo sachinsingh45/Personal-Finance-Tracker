@@ -370,199 +370,121 @@ const Reports = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50/30 to-indigo-50/20">
-      <div className="space-y-8">
-        {/* Enhanced Header */}
-        <div className="relative overflow-hidden bg-white rounded-2xl shadow-lg border border-gray-100">
-          <div className="absolute inset-0 bg-gradient-to-r from-blue-600/5 via-purple-600/5 to-indigo-600/5"></div>
-          <div className="relative p-8">
-            <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
-              <div className="space-y-3">
-                <div className="flex items-center space-x-3">
-                  <div className="p-3 bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl shadow-lg">
-                    <BarChart3 className="h-8 w-8 text-white" />
-                  </div>
-        <div>
-                    <h1 className="text-xl sm:text-2xl font-bold text-gray-900">
-                      Financial Reports
-                    </h1>
-                    <p className="text-gray-600 mt-1 text-sm">Comprehensive analysis of your financial data and trends</p>
-                  </div>
-                </div>
-        </div>
-              <div className="flex flex-col sm:flex-row gap-3">
-        <button
-          onClick={exportToCSV}
-                  className="group flex items-center justify-center space-x-3 px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-xl hover:from-blue-700 hover:to-blue-800 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
-        >
-                  <Download className="h-5 w-5 group-hover:animate-bounce" />
-                  <span className="font-semibold">Export CSV</span>
-        </button>
-              </div>
-            </div>
+    <div className="space-y-6">
+        {/* Header */}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div>
+            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Reports</h1>
+            <p className="mt-1 text-sm text-gray-600">
+              Financial analysis for {getMonthName(selectedMonth.month)} {selectedMonth.year}
+            </p>
           </div>
-      </div>
+          <button
+            onClick={exportToCSV}
+            className="btn-primary flex items-center gap-2"
+          >
+            <Download className="h-4 w-4" />
+            Export CSV
+          </button>
+        </div>
 
-        {/* Enhanced Month Filter */}
-        <div className="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
-          <div className="bg-gradient-to-r from-gray-50 to-blue-50/50 px-6 py-4 border-b border-gray-100">
-            <div className="flex items-center space-x-3">
-              <div className="p-2 bg-blue-100 rounded-lg">
-                <Calendar className="h-5 w-5 text-blue-600" />
-              </div>
-              <h3 className="text-lg font-semibold text-gray-900">Month Filter</h3>
-              {isLoading && (
-                <div className="ml-auto">
-                  <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-blue-600"></div>
-                </div>
-              )}
-            </div>
+        {/* Month Filter */}
+        <div className="bg-white border border-gray-200 rounded-lg p-4">
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-lg font-medium text-gray-900">Filter by Month</h3>
+            {isLoading && (
+              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600"></div>
+            )}
           </div>
-          <div className="p-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="space-y-2">
-                <label className="block text-sm font-semibold text-gray-700">Month</label>
-                <div className="relative">
-                  <select
-                    value={selectedMonth.month}
-                    onChange={(e) => handleMonthChange('month', e.target.value)}
-                    className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-gray-50 focus:bg-white appearance-none"
-                  >
-                    {Array.from({ length: 12 }, (_, i) => (
-                      <option key={i} value={i}>
-                        {getMonthName(i)}
-                      </option>
-                    ))}
-                  </select>
-                  <div className="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
-                    <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                    </svg>
-                  </div>
-                </div>
-              </div>
-              <div className="space-y-2">
-                <label className="block text-sm font-semibold text-gray-700">Year</label>
-                <div className="relative">
-                  <select
-                    value={selectedMonth.year}
-                    onChange={(e) => handleMonthChange('year', e.target.value)}
-                    className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-gray-50 focus:bg-white appearance-none"
-                  >
-                    {Array.from({ length: 10 }, (_, i) => {
-                      const year = new Date().getFullYear() - 5 + i
-                      return (
-                        <option key={year} value={year}>
-                          {year}
-                        </option>
-                      )
-                    })}
-                  </select>
-                  <div className="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
-                    <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                    </svg>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="mt-4 flex justify-between items-center text-sm text-gray-500">
-              <span>Selected month: {getMonthName(selectedMonth.month)} {selectedMonth.year}</span>
-              <button
-                onClick={() => setSelectedMonth({
-                  year: new Date().getFullYear(),
-                  month: new Date().getMonth()
-                })}
-                className="text-blue-600 hover:text-blue-700 font-medium"
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Month</label>
+              <select
+                value={selectedMonth.month}
+                onChange={(e) => handleMonthChange('month', e.target.value)}
+                className="form-select w-full"
               >
-                Reset to Current Month
-              </button>
+                {Array.from({ length: 12 }, (_, i) => (
+                  <option key={i} value={i}>
+                    {getMonthName(i)}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Year</label>
+              <select
+                value={selectedMonth.year}
+                onChange={(e) => handleMonthChange('year', e.target.value)}
+                className="form-select w-full"
+              >
+                {Array.from({ length: 10 }, (_, i) => {
+                  const year = new Date().getFullYear() - 5 + i
+                  return (
+                    <option key={year} value={year}>
+                      {year}
+                    </option>
+                  )
+                })}
+              </select>
             </div>
           </div>
         </div>
         
-        {/* Enhanced Summary Statistics */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          <div className="group relative overflow-hidden bg-gradient-to-br from-emerald-500 via-green-500 to-teal-600 p-6 rounded-2xl text-white shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1">
-            <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-            <div className="relative z-10">
-              <div className="flex items-center justify-between mb-4">
-                <div className="p-3 bg-white/20 rounded-xl backdrop-blur-sm">
-                  <TrendingUp className="h-6 w-6 text-white" />
-                </div>
-                <div className="text-right">
-                  <p className="text-emerald-100 text-sm font-semibold uppercase tracking-wide">Total Income</p>
-                  <p className="text-2xl lg:text-3xl font-bold mt-1">{formatCurrency(getTotalIncome())}</p>
-                </div>
+        {/* Summary Statistics */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="bg-white border border-gray-200 rounded-lg p-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-gray-600">Income</p>
+                <p className="text-xl font-semibold text-green-600">
+                  ₹{getTotalIncome().toLocaleString()}
+                </p>
               </div>
-              <div className="flex items-center space-x-2">
-                <div className="w-2 h-2 bg-emerald-200 rounded-full animate-pulse"></div>
-                <span className="text-emerald-100 text-xs font-medium">Positive Growth</span>
-              </div>
+              <TrendingUp className="h-8 w-8 text-green-500" />
             </div>
           </div>
           
-          <div className="group relative overflow-hidden bg-gradient-to-br from-red-500 via-rose-500 to-pink-600 p-6 rounded-2xl text-white shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1">
-            <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-            <div className="relative z-10">
-              <div className="flex items-center justify-between mb-4">
-                <div className="p-3 bg-white/20 rounded-xl backdrop-blur-sm">
-                  <IndianRupee className="h-6 w-6 text-white" />
-                </div>
-                <div className="text-right">
-                  <p className="text-red-100 text-sm font-semibold uppercase tracking-wide">Total Expenses</p>
-                  <p className="text-2xl lg:text-3xl font-bold mt-1">{formatCurrency(getTotalExpenses())}</p>
-                </div>
+          <div className="bg-white border border-gray-200 rounded-lg p-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-gray-600">Expenses</p>
+                <p className="text-xl font-semibold text-red-600">
+                  ₹{getTotalExpenses().toLocaleString()}
+                </p>
               </div>
-              <div className="flex items-center space-x-2">
-                <div className="w-2 h-2 bg-red-200 rounded-full animate-pulse"></div>
-                <span className="text-red-100 text-xs font-medium">Expense Tracking</span>
-              </div>
-          </div>
-        </div>
-        
-          <div className="group relative overflow-hidden bg-gradient-to-br from-blue-500 via-indigo-500 to-purple-600 p-6 rounded-2xl text-white shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1">
-            <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-            <div className="relative z-10">
-              <div className="flex items-center justify-between mb-4">
-                <div className="p-3 bg-white/20 rounded-xl backdrop-blur-sm">
-                  <BarChart3 className="h-6 w-6 text-white" />
-                </div>
-                <div className="text-right">
-                  <p className="text-blue-100 text-sm font-semibold uppercase tracking-wide">Net Balance</p>
-                  <p className={`text-2xl lg:text-3xl font-bold mt-1 ${getTotalIncome() - getTotalExpenses() >= 0 ? 'text-blue-100' : 'text-orange-200'}`}>
-                    {formatCurrency(getTotalIncome() - getTotalExpenses())}
-                  </p>
-                </div>
-              </div>
-              <div className="flex items-center space-x-2">
-                <div className={`w-2 h-2 rounded-full animate-pulse ${getTotalIncome() - getTotalExpenses() >= 0 ? 'bg-blue-200' : 'bg-orange-200'}`}></div>
-                <span className="text-blue-100 text-xs font-medium">
-                  {getTotalIncome() - getTotalExpenses() >= 0 ? 'Positive Balance' : 'Negative Balance'}
-                </span>
-              </div>
+              <IndianRupee className="h-8 w-8 text-red-500" />
             </div>
           </div>
           
-          <div className="group relative overflow-hidden bg-gradient-to-br from-purple-500 via-violet-500 to-indigo-600 p-6 rounded-2xl text-white shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1">
-            <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-            <div className="relative z-10">
-              <div className="flex items-center justify-between mb-4">
-                <div className="p-3 bg-white/20 rounded-xl backdrop-blur-sm">
-                  <List className="h-6 w-6 text-white" />
-                </div>
-                <div className="text-right">
-                  <p className="text-purple-100 text-sm font-semibold uppercase tracking-wide">Total Transactions</p>
-                  <p className="text-2xl lg:text-3xl font-bold mt-1">{getTotalTransactions()}</p>
-                </div>
+          <div className="bg-white border border-gray-200 rounded-lg p-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-gray-600">Balance</p>
+                <p className={`text-xl font-semibold ${
+                  getTotalIncome() - getTotalExpenses() >= 0 ? 'text-blue-600' : 'text-orange-600'
+                }`}>
+                  ₹{(getTotalIncome() - getTotalExpenses()).toLocaleString()}
+                </p>
               </div>
-              <div className="flex items-center space-x-2">
-                <div className="w-2 h-2 bg-purple-200 rounded-full animate-pulse"></div>
-                <span className="text-purple-100 text-xs font-medium">Activity Count</span>
-        </div>
+              <BarChart3 className={`h-8 w-8 ${
+                getTotalIncome() - getTotalExpenses() >= 0 ? 'text-blue-500' : 'text-orange-500'
+              }`} />
+            </div>
+          </div>
+          
+          <div className="bg-white border border-gray-200 rounded-lg p-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-gray-600">Transactions</p>
+                <p className="text-xl font-semibold text-gray-900">
+                  {getTotalTransactions()}
+                </p>
+              </div>
+              <List className="h-8 w-8 text-gray-500" />
+            </div>
           </div>
         </div>
-      </div>
 
       {/* Charts Section */}
       {isLoading ? (
@@ -576,20 +498,10 @@ const Reports = () => {
         <>
           {/* Side-by-Side Charts Section */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {/* Enhanced Expenses by Category */}
-            <div className="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
-              <div className="bg-gradient-to-r from-red-50 to-pink-50 px-6 py-5 border-b border-gray-100">
-                <div className="flex items-center space-x-3">
-                  <div className="p-2 bg-red-100 rounded-lg">
-                    <BarChart3 className="h-6 w-6 text-red-600" />
-                  </div>
-                  <div>
-                    <h3 className="text-xl font-bold text-gray-900">Expenses by Category</h3>
-                    <p className="text-gray-600 mt-1">
-                      Visual breakdown of your spending patterns
-                    </p>
-                  </div>
-                </div>
+            {/* Expenses by Category */}
+            <div className="bg-white border border-gray-200 rounded-lg">
+              <div className="p-4 border-b border-gray-200">
+                <h3 className="text-lg font-medium text-gray-900">Expenses by Category</h3>
               </div>
               <div className="p-6">
                 {expensesByCategory.length > 0 ? (
@@ -648,21 +560,11 @@ const Reports = () => {
               </div>
             </div>
 
-            {/* Enhanced Monthly Income vs Expenses */}
+            {/* Monthly Income vs Expenses */}
           {monthlyData.length > 0 && (
-              <div className="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
-                <div className="bg-gradient-to-r from-blue-50 to-indigo-50 px-6 py-5 border-b border-gray-100">
-                  <div className="flex items-center space-x-3">
-                    <div className="p-2 bg-blue-100 rounded-lg">
-                      <TrendingUp className="h-6 w-6 text-blue-600" />
-                    </div>
-                    <div>
-                      <h3 className="text-xl font-bold text-gray-900">Monthly Income vs Expenses</h3>
-                      <p className="text-gray-600 mt-1">
-                        Track your monthly financial performance
-                </p>
-              </div>
-                  </div>
+              <div className="bg-white border border-gray-200 rounded-lg">
+                <div className="p-4 border-b border-gray-200">
+                  <h3 className="text-lg font-medium text-gray-900">Monthly Income vs Expenses</h3>
                 </div>
                 <div className="p-6">
                   <ResponsiveContainer width="100%" height={280}>
@@ -714,55 +616,35 @@ const Reports = () => {
           )}
           </div>
 
-          {/* Enhanced Interactive Daily Financial Overview */}
+          {/* Daily Financial Overview */}
           {dailyData.length > 0 && (
-            <div className="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
-              <div className="bg-gradient-to-r from-purple-50 to-indigo-50 px-6 py-5 border-b border-gray-100">
-                <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
-                  <div className="flex items-center space-x-3">
-                    <div className="p-2 bg-purple-100 rounded-lg">
-                      <Calendar className="h-6 w-6 text-purple-600" />
-                    </div>
-                  <div>
-                      <h3 className="text-xl font-bold text-gray-900">Daily Financial Overview</h3>
-                      <p className="text-gray-600 mt-1">
-                      Track your daily income, expenses, and running balance
-                    </p>
-                    </div>
-                  </div>
-                </div>
+            <div className="bg-white border border-gray-200 rounded-lg">
+              <div className="p-4 border-b border-gray-200">
+                <h3 className="text-lg font-medium text-gray-900">Daily Financial Overview</h3>
               </div>
               
               <div className="p-6">
                 {/* Enhanced Hovered Data Display */}
                 {hoveredData && (
-                  <div className="mb-6 p-6 bg-gradient-to-r from-gray-50 to-blue-50/50 rounded-xl border border-gray-200 shadow-sm">
-                    <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
+                  <div className="mb-4 p-4 bg-gray-50 rounded-lg border border-gray-200">
+                    <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
                       <div className="text-center">
-                        <div className="p-3 bg-white rounded-lg shadow-sm mb-2">
-                          <p className="text-xs text-gray-500 uppercase tracking-wide font-semibold">Date</p>
-                          <p className="text-lg font-bold text-gray-900 mt-1">{hoveredData.day}</p>
-                        </div>
+                        <p className="text-xs text-gray-500 mb-1">Date</p>
+                        <p className="text-sm font-medium text-gray-900">{hoveredData.day}</p>
                       </div>
                       <div className="text-center">
-                        <div className="p-3 bg-white rounded-lg shadow-sm mb-2">
-                          <p className="text-xs text-gray-500 uppercase tracking-wide font-semibold">Income</p>
-                          <p className="text-lg font-bold text-green-600 mt-1">{formatCurrency(hoveredData.income)}</p>
-                        </div>
+                        <p className="text-xs text-gray-500 mb-1">Income</p>
+                        <p className="text-sm font-medium text-green-600">₹{hoveredData.income.toLocaleString()}</p>
                       </div>
                       <div className="text-center">
-                        <div className="p-3 bg-white rounded-lg shadow-sm mb-2">
-                          <p className="text-xs text-gray-500 uppercase tracking-wide font-semibold">Expenses</p>
-                          <p className="text-lg font-bold text-red-600 mt-1">{formatCurrency(hoveredData.expenses)}</p>
-                        </div>
+                        <p className="text-xs text-gray-500 mb-1">Expenses</p>
+                        <p className="text-sm font-medium text-red-600">₹{hoveredData.expenses.toLocaleString()}</p>
                       </div>
                       <div className="text-center">
-                        <div className="p-3 bg-white rounded-lg shadow-sm mb-2">
-                          <p className="text-xs text-gray-500 uppercase tracking-wide font-semibold">Balance</p>
-                          <p className={`text-lg font-bold mt-1 ${hoveredData.runningBalance >= 0 ? 'text-blue-600' : 'text-orange-600'}`}>
-                          {formatCurrency(hoveredData.runningBalance)}
+                        <p className="text-xs text-gray-500 mb-1">Balance</p>
+                        <p className={`text-sm font-medium ${hoveredData.runningBalance >= 0 ? 'text-blue-600' : 'text-orange-600'}`}>
+                          ₹{hoveredData.runningBalance.toLocaleString()}
                         </p>
-                        </div>
                       </div>
                     </div>
                   </div>
@@ -847,26 +729,16 @@ const Reports = () => {
             </div>
           )}
 
-          {/* Enhanced Transaction List Toggle */}
-          <div className="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
-            <div className="bg-gradient-to-r from-gray-50 to-slate-50 px-6 py-5 border-b border-gray-100">
-              <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
-                <div className="flex items-center space-x-3">
-                  <div className="p-2 bg-gray-100 rounded-lg">
-                    <List className="h-6 w-6 text-gray-600" />
-                  </div>
-                  <div>
-                    <h3 className="text-xl font-bold text-gray-900">Transaction Details</h3>
-                    <p className="text-gray-600 mt-1">
-                      View and filter your transaction history
-                    </p>
-                  </div>
-                </div>
-                <div className="flex flex-col sm:flex-row gap-3">
+          {/* Transaction List Toggle */}
+          <div className="bg-white border border-gray-200 rounded-lg">
+            <div className="p-4 border-b border-gray-200">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <h3 className="text-lg font-medium text-gray-900">Transaction Details</h3>
+                <div className="flex gap-3">
                   <select
                     value={filterType}
                     onChange={(e) => setFilterType(e.target.value)}
-                    className="px-4 py-2 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-white"
+                    className="form-select"
                   >
                     <option value="all">All Transactions</option>
                     <option value="income">Income Only</option>
@@ -874,10 +746,10 @@ const Reports = () => {
                   </select>
                   <button
                     onClick={() => setShowTransactionList(!showTransactionList)}
-                    className="group flex items-center justify-center space-x-2 px-4 py-2 bg-gray-100 text-gray-700 rounded-xl hover:bg-gray-200 transition-all duration-200 shadow-sm hover:shadow-md"
+                    className="btn-secondary flex items-center gap-2"
                   >
-                    {showTransactionList ? <EyeOff className="h-4 w-4 group-hover:scale-110 transition-transform" /> : <Eye className="h-4 w-4 group-hover:scale-110 transition-transform" />}
-                    <span className="font-semibold">{showTransactionList ? 'Hide' : 'Show'} Details</span>
+                    {showTransactionList ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                    {showTransactionList ? 'Hide' : 'Show'} Details
                   </button>
                 </div>
               </div>
@@ -887,39 +759,39 @@ const Reports = () => {
               <div className="p-6">
                 <div className="overflow-x-auto">
                   <table className="min-w-full divide-y divide-gray-200">
-                    <thead className="bg-gradient-to-r from-gray-50 to-gray-100">
+                    <thead className="bg-gray-50">
                       <tr>
-                        <th className="px-6 py-4 text-left text-xs font-bold text-gray-600 uppercase tracking-wider">Date</th>
-                        <th className="px-6 py-4 text-left text-xs font-bold text-gray-600 uppercase tracking-wider">Type</th>
-                        <th className="px-6 py-4 text-left text-xs font-bold text-gray-600 uppercase tracking-wider">Category</th>
-                        <th className="px-6 py-4 text-left text-xs font-bold text-gray-600 uppercase tracking-wider">Description</th>
-                        <th className="px-6 py-4 text-left text-xs font-bold text-gray-600 uppercase tracking-wider">Amount</th>
+                        <th className="px-4 py-3 text-left text-sm font-medium text-gray-700">Date</th>
+                        <th className="px-4 py-3 text-left text-sm font-medium text-gray-700">Type</th>
+                        <th className="px-4 py-3 text-left text-sm font-medium text-gray-700">Category</th>
+                        <th className="px-4 py-3 text-left text-sm font-medium text-gray-700">Description</th>
+                        <th className="px-4 py-3 text-left text-sm font-medium text-gray-700">Amount</th>
                       </tr>
                     </thead>
-                    <tbody className="bg-white divide-y divide-gray-100">
-                      {getFilteredTransactions().map((transaction, index) => (
-                        <tr key={transaction._id} className={`hover:bg-gray-50 transition-colors duration-200 ${index % 2 === 0 ? 'bg-white' : 'bg-gray-50/50'}`}>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                    <tbody className="divide-y divide-gray-100">
+                      {getFilteredTransactions().map((transaction) => (
+                        <tr key={transaction._id} className="hover:bg-gray-50">
+                          <td className="px-4 py-3 text-sm text-gray-900">
                             {new Date(transaction.date).toLocaleDateString()}
                           </td>
-                          <td className="px-6 py-4 whitespace-nowrap">
-                            <span className={`inline-flex px-3 py-1 text-xs font-bold rounded-full ${
+                          <td className="px-4 py-3">
+                            <span className={`text-xs px-2 py-1 rounded capitalize ${
                               transaction.type === 'income' 
-                                ? 'bg-green-100 text-green-800 border border-green-200' 
-                                : 'bg-red-100 text-red-800 border border-red-200'
+                                ? 'bg-green-100 text-green-700' 
+                                : 'bg-red-100 text-red-700'
                             }`}>
-                              {transaction.type.charAt(0).toUpperCase() + transaction.type.slice(1)}
+                              {transaction.type}
                             </span>
                           </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                          <td className="px-4 py-3 text-sm text-gray-900">
                             {transaction.category}
                           </td>
-                          <td className="px-6 py-4 text-sm text-gray-600 max-w-xs truncate">
+                          <td className="px-4 py-3 text-sm text-gray-600 max-w-xs truncate">
                             {transaction.description || '-'}
                           </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm font-bold text-gray-900">
+                          <td className="px-4 py-3 text-sm font-medium">
                             <span className={`${transaction.type === 'income' ? 'text-green-600' : 'text-red-600'}`}>
-                              {transaction.type === 'income' ? '+' : '-'}{formatCurrency(transaction.amount)}
+                              {transaction.type === 'income' ? '+' : '-'}₹{transaction.amount.toLocaleString()}
                             </span>
                           </td>
                         </tr>
@@ -988,7 +860,6 @@ const Reports = () => {
           </div>
         </div>
       )}
-      </div>
     </div>
   )
 }
