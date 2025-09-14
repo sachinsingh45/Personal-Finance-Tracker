@@ -23,7 +23,7 @@ app.use(cors({
     'http://localhost:5173',
     'http://localhost:3000',
     'https://personal-finance-tracker-i4nl.vercel.app',
-    'https://personal-finance-tracker-beta-inky.vercel.app/',
+    'https://personal-finance-tracker-beta-inky.vercel.app',
     'https://vercel.com'
   ],
   credentials: true,

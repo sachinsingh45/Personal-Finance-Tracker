@@ -67,11 +67,6 @@ const Register = () => {
         {/* Form Card */}
         <div className="bg-white rounded-lg border border-gray-200 p-6">
           <form className="space-y-6" onSubmit={handleSubmit}>
-            {error && (
-              <div className="bg-red-50 border border-red-200 rounded-lg p-3">
-                <p className="text-red-700 text-sm">{error}</p>
-              </div>
-            )}
             
             {/* Name Field */}
             <div>
