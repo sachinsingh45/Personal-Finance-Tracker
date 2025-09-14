@@ -17,7 +17,6 @@ const AddTransaction = () => {
 
       let response
       
-      // Use receipt API if receipt metadata is present
       if (transactionData.receiptMetadata) {
         response = await receiptAPI.createTransaction(transactionData)
       } else {
@@ -26,13 +25,11 @@ const AddTransaction = () => {
       
       toast.success('Transaction added successfully! 🎉')
       
-      // Redirect to dashboard after a short delay
       setTimeout(() => {
         navigate('/')
       }, 1500)
 
     } catch (err) {
-      console.error('Error creating transaction:', err)
       const errorMessage = err.response?.data?.message || err.message || 'Failed to add transaction. Please try again.'
       toast.error(errorMessage)
       setError(errorMessage)

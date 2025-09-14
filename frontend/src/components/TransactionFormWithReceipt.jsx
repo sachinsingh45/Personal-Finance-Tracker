@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { toast } from 'react-toastify'
-import { IndianRupee, Calendar, Tag, FileText, Plus, Receipt, Sparkles } from 'lucide-react'
+import { Receipt } from 'lucide-react'
+import { formatDateInput } from '../utils/formatters'
 import ReceiptUpload from './ReceiptUpload'
 import ReceiptMetadataDisplay from './ReceiptMetadataDisplay'
 
@@ -10,7 +11,7 @@ const TransactionFormWithReceipt = ({ onSubmit, initialData = {}, submitButtonTe
     amount: initialData.amount || '',
     category: initialData.category || '',
     description: initialData.description || '',
-    date: initialData.date ? new Date(initialData.date).toISOString().split('T')[0] : new Date().toISOString().split('T')[0]
+    date: initialData.date ? formatDateInput(initialData.date) : formatDateInput(new Date())
   })
 
   const [loading, setLoading] = useState(false)
@@ -18,7 +19,6 @@ const TransactionFormWithReceipt = ({ onSubmit, initialData = {}, submitButtonTe
   const [receiptData, setReceiptData] = useState(null)
   const [showReceiptUpload, setShowReceiptUpload] = useState(false)
 
-  // Common categories for quick selection
   const expenseCategories = [
     'Food & Dining', 'Transportation', 'Shopping', 'Entertainment',
     'Bills & Utilities', 'Healthcare', 'Education', 'Travel', 'Groceries', 'Other'
@@ -34,7 +34,6 @@ const TransactionFormWithReceipt = ({ onSubmit, initialData = {}, submitButtonTe
       [field]: value
     }))
     
-    // Clear error when user starts typing
     if (errors[field]) {
       setErrors(prev => ({
         ...prev,
@@ -46,7 +45,6 @@ const TransactionFormWithReceipt = ({ onSubmit, initialData = {}, submitButtonTe
   const handleReceiptAnalyzed = (data) => {
     setReceiptData(data)
     
-    // Auto-fill form with receipt data
     const updates = {}
     
     if (data.total && data.total > 0) {
@@ -62,10 +60,9 @@ const TransactionFormWithReceipt = ({ onSubmit, initialData = {}, submitButtonTe
     }
     
     if (data.transactionDate) {
-      updates.date = new Date(data.transactionDate).toISOString().split('T')[0]
+      updates.date = formatDateInput(data.transactionDate)
     }
     
-    // Always set to expense for receipts
     updates.type = 'expense'
     
     setFormData(prev => ({
@@ -73,7 +70,6 @@ const TransactionFormWithReceipt = ({ onSubmit, initialData = {}, submitButtonTe
       ...updates
     }))
 
-    // Show success message with confidence info
     if (data.confidence) {
       const avgConfidence = Math.round(
         (data.confidence.merchant + data.confidence.total + data.confidence.date) / 3 * 100
@@ -131,13 +127,12 @@ const TransactionFormWithReceipt = ({ onSubmit, initialData = {}, submitButtonTe
           amount: '',
           category: '',
           description: '',
-          date: new Date().toISOString().split('T')[0]
+          date: formatDateInput(new Date())
         })
         setReceiptData(null)
         setShowReceiptUpload(false)
       }
     } catch (error) {
-      console.error('Form submission error:', error)
     } finally {
       setLoading(false)
     }
@@ -293,7 +288,7 @@ const TransactionFormWithReceipt = ({ onSubmit, initialData = {}, submitButtonTe
           value={formData.date}
           onChange={(e) => handleChange('date', e.target.value)}
           className="form-input w-full"
-          max={new Date().toISOString().split('T')[0]}
+          max={formatDateInput(new Date())}
         />
       </div>
 
@@ -301,9 +296,7 @@ const TransactionFormWithReceipt = ({ onSubmit, initialData = {}, submitButtonTe
       <button
         type="submit"
         disabled={loading}
-        className={`w-full bg-blue-600 text-white py-3 px-4 rounded-lg hover:bg-blue-700 font-medium ${
-          loading ? 'opacity-50 cursor-not-allowed' : ''
-        }`}
+        className={`btn-primary w-full ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
       >
         {loading ? 'Adding...' : submitButtonText}
       </button>

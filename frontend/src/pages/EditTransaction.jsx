@@ -24,7 +24,6 @@ const EditTransaction = () => {
       setLoading(true)
       setError('')
       
-      // Get all transactions and find the one we need
       const response = await transactionAPI.getAll()
       const foundTransaction = response.data?.find(t => t._id === id)
       
@@ -35,7 +34,6 @@ const EditTransaction = () => {
       
       setTransaction(foundTransaction)
     } catch (err) {
-      console.error('Error fetching transaction:', err)
       setError('Failed to load transaction')
     } finally {
       setLoading(false)
@@ -51,13 +49,11 @@ const EditTransaction = () => {
       
       toast.success('Transaction updated successfully! ✅')
       
-      // Redirect to transactions list after a short delay
       setTimeout(() => {
         navigate('/transactions')
       }, 1500)
 
     } catch (err) {
-      console.error('Error updating transaction:', err)
       const errorMessage = err.response?.data?.message || err.message || 'Failed to update transaction. Please try again.'
       toast.error(errorMessage)
       setError(errorMessage)

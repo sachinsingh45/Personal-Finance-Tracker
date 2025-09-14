@@ -1,4 +1,3 @@
-// Shared utility functions for receipt metadata handling
 
 export const formatCurrency = (amount) => {
   return new Intl.NumberFormat('en-IN', {

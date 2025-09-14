@@ -61,9 +61,6 @@ const ReceiptUpload = ({ onReceiptAnalyzed, disabled = false }) => {
       }
 
     } catch (error) {
-      console.error('Receipt upload error:', error);
-      
-      // Handle specific error cases
       if (error.message.includes('Receipt analysis service is not configured')) {
         toast.error('Azure Document Intelligence is not configured. Please contact administrator to set up receipt analysis.');
       } else if (error.message.includes('Could not extract data from the receipt')) {

@@ -85,7 +85,6 @@ const TransactionForm = ({ onSubmit, initialData = {}, submitButtonText = "Add T
         })
       }
     } catch (error) {
-      console.error('Form submission error:', error)
     } finally {
       setLoading(false)
     }

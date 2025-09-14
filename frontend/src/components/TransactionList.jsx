@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
-import { Edit2, Trash2, IndianRupee, Calendar, Tag, FileText, Receipt } from 'lucide-react'
+import { Edit2, Trash2, IndianRupee, Receipt } from 'lucide-react'
+import { formatCurrency, formatDate, truncateText, getAmountColor, getAmountPrefix } from '../utils/formatters'
 import ReceiptTooltip from './ReceiptTooltip'
 
 const TransactionList = ({ transactions, onEdit, onDelete, loading = false }) => {
@@ -11,24 +12,9 @@ const TransactionList = ({ transactions, onEdit, onDelete, loading = false }) =>
       await onDelete(id)
       setDeleteConfirm(null)
     } catch (error) {
-      console.error('Error deleting transaction:', error)
     }
   }
 
-  const formatCurrency = (amount) => {
-    return new Intl.NumberFormat('en-IN', {
-      style: 'currency',
-      currency: 'INR'
-    }).format(amount)
-  }
-
-  const formatDate = (date) => {
-    return new Date(date).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric'
-    })
-  }
 
   const handleReceiptClick = (transaction) => {
     if (transaction.receiptMetadata?.hasReceipt) {
@@ -38,34 +24,18 @@ const TransactionList = ({ transactions, onEdit, onDelete, loading = false }) =>
 
   if (loading) {
     return (
-      <div className="card">
-        <div className="card-body">
-          <div className="animate-pulse">
-            <div className="space-y-3">
-              {[1, 2, 3, 4, 5].map(i => (
-                <div key={i} className="flex items-center space-x-4">
-                  <div className="h-4 bg-gray-200 rounded flex-1"></div>
-                  <div className="h-4 bg-gray-200 rounded w-20"></div>
-                  <div className="h-4 bg-gray-200 rounded w-16"></div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
+      <div className="flex justify-center py-8">
+        <div className="animate-spin rounded-full h-8 w-8 border-2 border-blue-600 border-t-transparent"></div>
       </div>
     )
   }
 
   if (!transactions?.length) {
     return (
-      <div className="card">
-        <div className="card-body text-center py-12">
-          <IndianRupee className="mx-auto h-12 w-12 text-gray-400" />
-          <h3 className="mt-2 text-sm font-medium text-gray-900">No transactions</h3>
-          <p className="mt-1 text-sm text-gray-500">
-            Get started by adding your first transaction.
-          </p>
-        </div>
+      <div className="bg-white rounded-lg border border-gray-200 p-8 text-center">
+        <IndianRupee className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+        <h3 className="text-lg font-medium text-gray-900 mb-2">No transactions</h3>
+        <p className="text-gray-600">Get started by adding your first transaction.</p>
       </div>
     )
   }
@@ -104,9 +74,7 @@ const TransactionList = ({ transactions, onEdit, onDelete, loading = false }) =>
                   <td className="px-4 py-3">
                     <div className="flex items-center space-x-2">
                       <div className="text-sm text-gray-900">
-                        {transaction.description && transaction.description.length > 40 
-                          ? `${transaction.description.substring(0, 40)}...` 
-                          : transaction.description || 'No description'}
+                        {truncateText(transaction.description, 40)}
                       </div>
                       {transaction.receiptMetadata?.hasReceipt && (
                         <button
@@ -128,10 +96,8 @@ const TransactionList = ({ transactions, onEdit, onDelete, loading = false }) =>
                     {formatDate(transaction.date)}
                   </td>
                   <td className="px-4 py-3">
-                    <span className={`text-sm font-medium ${
-                      transaction.type === 'income' ? 'text-green-600' : 'text-red-600'
-                    }`}>
-                      {transaction.type === 'income' ? '+' : '-'}₹{transaction.amount.toLocaleString()}
+                    <span className={`text-sm font-medium ${getAmountColor(transaction.type)}`}>
+                      {getAmountPrefix(transaction.type)}{formatCurrency(transaction.amount)}
                     </span>
                   </td>
                   <td className="px-4 py-3 text-right">
@@ -147,13 +113,13 @@ const TransactionList = ({ transactions, onEdit, onDelete, loading = false }) =>
                       )}
                       <button
                         onClick={() => onEdit?.(transaction)}
-                        className="text-gray-400 hover:text-blue-600 p-1 rounded"
+                        className="btn-icon text-gray-400 hover:text-blue-600 hover:bg-blue-50"
                       >
                         <Edit2 className="h-4 w-4" />
                       </button>
                       <button
                         onClick={() => setDeleteConfirm(transaction._id)}
-                        className="text-gray-400 hover:text-red-600 p-1 rounded"
+                        className="btn-icon text-gray-400 hover:text-red-600 hover:bg-red-50"
                       >
                         <Trash2 className="h-4 w-4" />
                       </button>
@@ -205,10 +171,8 @@ const TransactionList = ({ transactions, onEdit, onDelete, loading = false }) =>
             <div className="flex items-center justify-between">
               <div className="flex-1">
                 <div className="flex items-center justify-between mb-2">
-                  <span className={`text-lg font-medium ${
-                    transaction.type === 'income' ? 'text-green-600' : 'text-red-600'
-                  }`}>
-                    {transaction.type === 'income' ? '+' : '-'}₹{transaction.amount.toLocaleString()}
+                  <span className={`text-lg font-medium ${getAmountColor(transaction.type)}`}>
+                    {getAmountPrefix(transaction.type)}{formatCurrency(transaction.amount)}
                   </span>
                   <div className="flex items-center space-x-1">
                     {transaction.receiptMetadata?.hasReceipt && (
@@ -222,13 +186,13 @@ const TransactionList = ({ transactions, onEdit, onDelete, loading = false }) =>
                     )}
                     <button
                       onClick={() => onEdit?.(transaction)}
-                      className="text-gray-400 hover:text-blue-600 p-1 rounded"
+                      className="btn-icon text-gray-400 hover:text-blue-600 hover:bg-blue-50"
                     >
                       <Edit2 className="h-4 w-4" />
                     </button>
                     <button
                       onClick={() => setDeleteConfirm(transaction._id)}
-                      className="text-gray-400 hover:text-red-600 p-1 rounded"
+                      className="btn-icon text-gray-400 hover:text-red-600 hover:bg-red-50"
                     >
                       <Trash2 className="h-4 w-4" />
                     </button>
@@ -237,9 +201,7 @@ const TransactionList = ({ transactions, onEdit, onDelete, loading = false }) =>
                 
                 <div className="space-y-1">
                   <div className="text-sm text-gray-900">
-                    {transaction.description && transaction.description.length > 50 
-                      ? `${transaction.description.substring(0, 50)}...` 
-                      : transaction.description || 'No description'}
+                    {truncateText(transaction.description, 50)}
                   </div>
                   <div className="flex items-center justify-between text-sm text-gray-500">
                     <span className="capitalize">{transaction.category}</span>
@@ -263,13 +225,13 @@ const TransactionList = ({ transactions, onEdit, onDelete, loading = false }) =>
             <div className="flex justify-end space-x-3">
               <button
                 onClick={() => setDeleteConfirm(null)}
-                className="btn-secondary"
+                className="btn-secondary flex-1 sm:flex-none"
               >
                 Cancel
               </button>
               <button
                 onClick={() => handleDelete(deleteConfirm)}
-                className="btn-danger"
+                className="btn-danger flex-1 sm:flex-none"
               >
                 Delete
               </button>
