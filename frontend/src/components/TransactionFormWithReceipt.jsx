@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { toast } from 'react-toastify'
 import { IndianRupee, Calendar, Tag, FileText, Plus, Receipt, Sparkles } from 'lucide-react'
 import ReceiptUpload from './ReceiptUpload'
+import ReceiptMetadataDisplay from './ReceiptMetadataDisplay'
 
 const TransactionFormWithReceipt = ({ onSubmit, initialData = {}, submitButtonText = "Add Transaction" }) => {
   const [formData, setFormData] = useState({
@@ -116,10 +117,9 @@ const TransactionFormWithReceipt = ({ onSubmit, initialData = {}, submitButtonTe
         date: new Date(formData.date)
       }
 
-      // Include receipt data if available
+      // Include receipt metadata if available
       if (receiptData) {
-        transactionData.receiptData = receiptData
-        transactionData.merchant = receiptData.merchant
+        transactionData.receiptMetadata = receiptData
       }
 
       await onSubmit(transactionData)
@@ -153,16 +153,16 @@ const TransactionFormWithReceipt = ({ onSubmit, initialData = {}, submitButtonTe
       <div className="border border-gray-200 rounded-lg p-3 mb-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-2">
-            <Receipt className="h-4 w-4 text-gray-600" />
-            <span className="text-sm font-medium text-gray-900">Receipt Scanner</span>
+            <Receipt className="h-4 w-4 text-gray-500" />
+            <span className="text-sm text-gray-700">Receipt Scanner</span>
           </div>
           <button
             type="button"
             onClick={() => setShowReceiptUpload(!showReceiptUpload)}
-            className={`px-3 py-1 text-xs rounded transition-colors ${
+            className={`px-3 py-1 text-xs rounded ${
               showReceiptUpload
                 ? 'bg-blue-600 text-white'
-                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
             }`}
           >
             {showReceiptUpload ? 'Hide' : 'Show'}
@@ -177,31 +177,22 @@ const TransactionFormWithReceipt = ({ onSubmit, initialData = {}, submitButtonTe
         </div>
       )}
 
-      {/* Receipt Data Preview */}
-      {receiptData && (
-        <div className="bg-green-50 border border-green-200 rounded-lg p-3 mb-4">
-          <div className="flex items-center space-x-2 mb-2">
-            <Sparkles className="h-4 w-4 text-green-600" />
-            <span className="text-sm font-medium text-green-900">Data Extracted</span>
-          </div>
-          <div className="text-xs text-green-700 space-y-1">
-            {receiptData.merchant && <div>Merchant: {receiptData.merchant}</div>}
-            {receiptData.total && <div>Amount: ₹{receiptData.total}</div>}
-            {receiptData.category && <div>Category: {receiptData.category}</div>}
-          </div>
-        </div>
-      )}
+      {/* Comprehensive Receipt Metadata Display */}
+      <ReceiptMetadataDisplay 
+        receiptData={receiptData} 
+        isVisible={!!receiptData} 
+      />
 
       {/* Transaction Type */}
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-2">
-          Transaction Type
+          Type
         </label>
         <div className="grid grid-cols-2 gap-3">
-          <label className={`flex items-center p-3 rounded-lg border-2 cursor-pointer transition-colors ${
+          <label className={`flex items-center p-3 rounded-lg border cursor-pointer ${
             formData.type === 'expense' 
               ? 'border-red-500 bg-red-50' 
-              : 'border-gray-200 hover:border-red-300'
+              : 'border-gray-200 hover:border-gray-300'
           }`}>
             <input
               type="radio"
@@ -211,21 +202,14 @@ const TransactionFormWithReceipt = ({ onSubmit, initialData = {}, submitButtonTe
               onChange={(e) => handleChange('type', e.target.value)}
               className="sr-only"
             />
-            <div className="flex items-center space-x-2">
-              <div className={`p-1 rounded ${formData.type === 'expense' ? 'bg-red-100' : 'bg-gray-100'}`}>
-                <svg className={`h-4 w-4 ${formData.type === 'expense' ? 'text-red-600' : 'text-gray-500'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
-                </svg>
-              </div>
-              <span className={`font-medium ${formData.type === 'expense' ? 'text-red-700' : 'text-gray-600'}`}>
-                Expense
-              </span>
-            </div>
+            <span className={`text-sm ${formData.type === 'expense' ? 'text-red-700 font-medium' : 'text-gray-600'}`}>
+              Expense
+            </span>
           </label>
-          <label className={`flex items-center p-3 rounded-lg border-2 cursor-pointer transition-colors ${
+          <label className={`flex items-center p-3 rounded-lg border cursor-pointer ${
             formData.type === 'income' 
               ? 'border-green-500 bg-green-50' 
-              : 'border-gray-200 hover:border-green-300'
+              : 'border-gray-200 hover:border-gray-300'
           }`}>
             <input
               type="radio"
@@ -235,16 +219,9 @@ const TransactionFormWithReceipt = ({ onSubmit, initialData = {}, submitButtonTe
               onChange={(e) => handleChange('type', e.target.value)}
               className="sr-only"
             />
-            <div className="flex items-center space-x-2">
-              <div className={`p-1 rounded ${formData.type === 'income' ? 'bg-green-100' : 'bg-gray-100'}`}>
-                <svg className={`h-4 w-4 ${formData.type === 'income' ? 'text-green-600' : 'text-gray-500'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 10l7-7m0 0l7 7m-7-7v18" />
-                </svg>
-              </div>
-              <span className={`font-medium ${formData.type === 'income' ? 'text-green-700' : 'text-gray-600'}`}>
-                Income
-              </span>
-            </div>
+            <span className={`text-sm ${formData.type === 'income' ? 'text-green-700 font-medium' : 'text-gray-600'}`}>
+              Income
+            </span>
           </label>
         </div>
         {errors.type && <p className="mt-1 text-sm text-red-600">{errors.type}</p>}
@@ -324,11 +301,11 @@ const TransactionFormWithReceipt = ({ onSubmit, initialData = {}, submitButtonTe
       <button
         type="submit"
         disabled={loading}
-        className={`w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors ${
+        className={`w-full bg-blue-600 text-white py-3 px-4 rounded-lg hover:bg-blue-700 font-medium ${
           loading ? 'opacity-50 cursor-not-allowed' : ''
         }`}
       >
-        {loading ? 'Adding...' : 'Add Transaction'}
+        {loading ? 'Adding...' : submitButtonText}
       </button>
     </form>
   )

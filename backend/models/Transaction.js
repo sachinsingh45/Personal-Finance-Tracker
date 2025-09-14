@@ -32,6 +32,44 @@ const transactionSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
     required: true
+  },
+  receiptMetadata: {
+    merchant: {
+      type: String,
+      default: null
+    },
+    transactionDate: {
+      type: Date,
+      default: null
+    },
+    items: [{
+      name: String,
+      price: Number
+    }],
+    confidence: {
+      merchant: {
+        type: Number,
+        default: 0,
+        min: 0,
+        max: 1
+      },
+      total: {
+        type: Number,
+        default: 0,
+        min: 0,
+        max: 1
+      },
+      date: {
+        type: Number,
+        default: 0,
+        min: 0,
+        max: 1
+      }
+    },
+    hasReceipt: {
+      type: Boolean,
+      default: false
+    }
   }
 });
 

@@ -3,7 +3,7 @@ import { useNavigate, Link } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import { Filter, X, ChevronDown, Plus } from 'lucide-react'
 import { transactionAPI } from '../services/api'
-import TransactionList from '../components/TransactionList'
+import TransactionListComponent from '../components/TransactionList'
 
 const TransactionListPage = () => {
   const navigate = useNavigate()
@@ -14,7 +14,7 @@ const TransactionListPage = () => {
   // Filter states
   const [filters, setFilters] = useState({
     month: '',
-    year: new Date().getFullYear(),
+    year: '',
     category: '',
     type: '' // 'income', 'expense', or ''
   })
@@ -30,11 +30,17 @@ const TransactionListPage = () => {
       setError('')
 
       const response = await transactionAPI.getAll()
-      setTransactions(response.data || [])
+      const transactionsData = response.data || []
+      setTransactions(transactionsData)
 
     } catch (err) {
       console.error('Error fetching transactions:', err)
-      setError('Failed to load transactions')
+      console.error('Error details:', {
+        message: err.message,
+        response: err.response?.data,
+        status: err.response?.status
+      })
+      setError(`Failed to load transactions: ${err.response?.data?.message || err.message}`)
     } finally {
       setLoading(false)
     }
@@ -76,7 +82,7 @@ const TransactionListPage = () => {
       }
 
       // Year filter
-      if (filters.year && transactionYear !== filters.year) {
+      if (filters.year && filters.year !== '' && transactionYear !== parseInt(filters.year)) {
         return false
       }
 
@@ -106,7 +112,7 @@ const TransactionListPage = () => {
   const clearFilters = () => {
     setFilters({
       month: '',
-      year: new Date().getFullYear(),
+      year: '',
       category: '',
       type: ''
     })
@@ -201,9 +207,10 @@ const TransactionListPage = () => {
               <label className="block text-sm font-medium text-gray-700 mb-2">Year</label>
               <select
                 value={filters.year}
-                onChange={(e) => handleFilterChange('year', parseInt(e.target.value))}
+                onChange={(e) => handleFilterChange('year', e.target.value)}
                 className="form-select"
               >
+                <option value="">All Years</option>
                 {Array.from({ length: 5 }, (_, i) => {
                   const year = new Date().getFullYear() - i
                   return (
@@ -277,7 +284,7 @@ const TransactionListPage = () => {
       )}
 
       {/* Transaction List */}
-      <TransactionList
+      <TransactionListComponent
         transactions={filteredTransactions}
         onEdit={handleEditTransaction}
         onDelete={handleDeleteTransaction}

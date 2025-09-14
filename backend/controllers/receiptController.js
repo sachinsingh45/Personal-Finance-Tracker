@@ -75,7 +75,8 @@ export const createTransactionFromReceipt = async (req, res) => {
       amount, 
       category, 
       description, 
-      date
+      date,
+      receiptMetadata
     } = req.body;
 
     // Validate required fields
@@ -94,7 +95,7 @@ export const createTransactionFromReceipt = async (req, res) => {
       });
     }
 
-    // Create transaction without receipt metadata
+    // Create transaction with receipt metadata
     const transactionData = {
       type,
       amount: Math.round(amount),
@@ -102,7 +103,20 @@ export const createTransactionFromReceipt = async (req, res) => {
       description: description || '',
       date: date || new Date(),
       currency: 'INR',
-      userId: req.user.id
+      userId: req.user.id,
+      receiptMetadata: receiptMetadata ? {
+        merchant: receiptMetadata.merchant || null,
+        transactionDate: receiptMetadata.transactionDate || null,
+        items: receiptMetadata.items || [],
+        confidence: {
+          merchant: receiptMetadata.confidence?.merchant || 0,
+          total: receiptMetadata.confidence?.total || 0,
+          date: receiptMetadata.confidence?.date || 0
+        },
+        hasReceipt: true
+      } : {
+        hasReceipt: false
+      }
     };
 
     const transaction = await Transaction.create(transactionData);

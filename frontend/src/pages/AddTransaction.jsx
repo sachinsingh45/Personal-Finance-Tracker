@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import { ArrowLeft } from 'lucide-react'
-import { transactionAPI } from '../services/api'
+import { transactionAPI, receiptAPI } from '../services/api'
 import TransactionFormWithReceipt from '../components/TransactionFormWithReceipt'
 
 const AddTransaction = () => {
@@ -15,7 +15,14 @@ const AddTransaction = () => {
       setError('')
       setSuccess('')
 
-      const response = await transactionAPI.create(transactionData)
+      let response
+      
+      // Use receipt API if receipt metadata is present
+      if (transactionData.receiptMetadata) {
+        response = await receiptAPI.createTransaction(transactionData)
+      } else {
+        response = await transactionAPI.create(transactionData)
+      }
       
       toast.success('Transaction added successfully! 🎉')
       

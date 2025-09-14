@@ -2,16 +2,19 @@ import Transaction from '../models/Transaction.js';
 
 export const getTransactions = async (req, res) => {
   try {
+    console.log('Getting transactions for user:', req.user.id);
     const transactions = await Transaction.find({ userId: req.user.id }).sort({ date: -1 });
+    console.log('Found transactions:', transactions.length);
     res.json(transactions);
   } catch (error) {
+    console.error('Error in getTransactions:', error);
     res.status(500).json({ message: 'Server Error' });
   }
 };
 
 export const createTransaction = async (req, res) => {
   try {
-    const { type, amount, category, description, date } = req.body;
+    const { type, amount, category, description, date, receiptMetadata } = req.body;
     
     if (!type || !amount || !category) {
       return res.status(400).json({ message: 'Please provide type, amount, and category' });
@@ -22,7 +25,7 @@ export const createTransaction = async (req, res) => {
       return res.status(400).json({ message: 'Amount must be greater than 0' });
     }
     
-    const transaction = await Transaction.create({
+    const transactionData = {
       type,
       amount: Math.round(amount), // Round to nearest rupee
       category,
@@ -30,10 +33,32 @@ export const createTransaction = async (req, res) => {
       date: date || new Date(),
       currency: 'INR',
       userId: req.user.id
-    });
+    };
+
+    // Add receipt metadata if provided
+    if (receiptMetadata) {
+      transactionData.receiptMetadata = {
+        merchant: receiptMetadata.merchant || null,
+        transactionDate: receiptMetadata.transactionDate || null,
+        items: receiptMetadata.items || [],
+        confidence: {
+          merchant: receiptMetadata.confidence?.merchant || 0,
+          total: receiptMetadata.confidence?.total || 0,
+          date: receiptMetadata.confidence?.date || 0
+        },
+        hasReceipt: true
+      };
+    } else {
+      transactionData.receiptMetadata = {
+        hasReceipt: false
+      };
+    }
+    
+    const transaction = await Transaction.create(transactionData);
     
     res.status(201).json(transaction);
   } catch (error) {
+    console.error('Create transaction error:', error);
     res.status(500).json({ message: 'Server Error' });
   }
 };

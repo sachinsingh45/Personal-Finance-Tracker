@@ -105,82 +105,56 @@ const Dashboard = () => {
       )}
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <div className="card">
-          <div className="card-body">
-            <div className="flex items-center">
-              <div className="flex-shrink-0">
-                <div className="h-10 w-10 bg-green-100 rounded-lg flex items-center justify-center">
-                  <TrendingUp className="h-6 w-6 text-green-600" />
-                </div>
-              </div>
-              <div className="ml-4">
-                <p className="text-sm font-medium text-gray-600">Total Income</p>
-                <p className="text-2xl font-bold text-green-600">
-                  {formatCurrency(stats.totalIncome)}
-                </p>
-              </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="bg-white border border-gray-200 rounded-lg p-4">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm text-gray-600">Income</p>
+              <p className="text-xl font-semibold text-green-600">
+                ₹{stats.totalIncome.toLocaleString()}
+              </p>
             </div>
+            <TrendingUp className="h-8 w-8 text-green-500" />
           </div>
         </div>
 
-        <div className="card">
-          <div className="card-body">
-            <div className="flex items-center">
-              <div className="flex-shrink-0">
-                <div className="h-10 w-10 bg-red-100 rounded-lg flex items-center justify-center">
-                  <TrendingDown className="h-6 w-6 text-red-600" />
-                </div>
-              </div>
-              <div className="ml-4">
-                <p className="text-sm font-medium text-gray-600">Total Expenses</p>
-                <p className="text-2xl font-bold text-red-600">
-                  {formatCurrency(stats.totalExpenses)}
-                </p>
-              </div>
+        <div className="bg-white border border-gray-200 rounded-lg p-4">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm text-gray-600">Expenses</p>
+              <p className="text-xl font-semibold text-red-600">
+                ₹{stats.totalExpenses.toLocaleString()}
+              </p>
             </div>
+            <TrendingDown className="h-8 w-8 text-red-500" />
           </div>
         </div>
 
-        <div className="card">
-          <div className="card-body">
-            <div className="flex items-center">
-              <div className="flex-shrink-0">
-                <div className={`h-10 w-10 rounded-lg flex items-center justify-center ${
-                  stats.balance >= 0 ? 'bg-blue-100' : 'bg-orange-100'
-                }`}>
-                  <IndianRupee className={`h-6 w-6 ${
-                    stats.balance >= 0 ? 'text-blue-600' : 'text-orange-600'
-                  }`} />
-                </div>
-              </div>
-              <div className="ml-4">
-                <p className="text-sm font-medium text-gray-600">Balance</p>
-                <p className={`text-2xl font-bold ${
-                  stats.balance >= 0 ? 'text-blue-600' : 'text-orange-600'
-                }`}>
-                  {formatCurrency(stats.balance)}
-                </p>
-              </div>
+        <div className="bg-white border border-gray-200 rounded-lg p-4">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm text-gray-600">Balance</p>
+              <p className={`text-xl font-semibold ${
+                stats.balance >= 0 ? 'text-blue-600' : 'text-orange-600'
+              }`}>
+                ₹{stats.balance.toLocaleString()}
+              </p>
             </div>
+            <IndianRupee className={`h-8 w-8 ${
+              stats.balance >= 0 ? 'text-blue-500' : 'text-orange-500'
+            }`} />
           </div>
         </div>
 
-        <div className="card">
-          <div className="card-body">
-            <div className="flex items-center">
-              <div className="flex-shrink-0">
-                <div className="h-10 w-10 bg-purple-100 rounded-lg flex items-center justify-center">
-                  <Activity className="h-6 w-6 text-purple-600" />
-                </div>
-              </div>
-              <div className="ml-4">
-                <p className="text-sm font-medium text-gray-600">Transactions</p>
-                <p className="text-2xl font-bold text-purple-600">
-                  {stats.transactionCount}
-                </p>
-              </div>
+        <div className="bg-white border border-gray-200 rounded-lg p-4">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm text-gray-600">Transactions</p>
+              <p className="text-xl font-semibold text-gray-900">
+                {stats.transactionCount}
+              </p>
             </div>
+            <Activity className="h-8 w-8 text-gray-500" />
           </div>
         </div>
       </div>
