@@ -1,6 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { Upload, Camera, X, FileText, Loader2, CheckCircle, AlertCircle } from 'lucide-react';
 import { toast } from 'react-toastify';
+import { BASE_URL } from '../config/constants';
 
 const ReceiptUpload = ({ onReceiptAnalyzed, disabled = false }) => {
   const [uploading, setUploading] = useState(false);
@@ -39,7 +40,7 @@ const ReceiptUpload = ({ onReceiptAnalyzed, disabled = false }) => {
       formData.append('receipt', file);
 
       const token = localStorage.getItem('token');
-      const response = await fetch('/api/receipts/upload', {
+      const response = await fetch(`${BASE_URL}/receipts/upload`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`
