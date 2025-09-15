@@ -84,8 +84,8 @@ export const checkAuthStatus = createAsyncThunk(
 const initialState = {
   user: null,
   token: localStorage.getItem('token'),
-  isLoading: false,
-  isAuthenticated: false,
+  isLoading: !!localStorage.getItem('token'), // Show loading if token exists
+  isAuthenticated: !!localStorage.getItem('token'), // Set to true if token exists
   error: null,
 };
 
@@ -159,7 +159,8 @@ const authSlice = createSlice({
       .addCase(checkAuthStatus.fulfilled, (state, action) => {
         state.isLoading = false;
         state.isAuthenticated = true;
-        state.user = action.payload.user;
+        state.user = action.payload;
+        state.token = localStorage.getItem('token');
         state.error = null;
       })
       .addCase(checkAuthStatus.rejected, (state, action) => {

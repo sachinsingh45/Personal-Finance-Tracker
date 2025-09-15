@@ -7,12 +7,6 @@ import transactionRoutes from './routes/transactions.js';
 import receiptRoutes from './routes/receipts.js';
 
 dotenv.config();
-
-// Debug environment variables
-console.log('Environment variables loaded:');
-console.log('AZURE_DOC_INTELLIGENCE_ENDPOINT:', process.env.AZURE_DOC_INTELLIGENCE_ENDPOINT ? 'SET' : 'NOT SET');
-console.log('AZURE_DOC_INTELLIGENCE_KEY:', process.env.AZURE_DOC_INTELLIGENCE_KEY ? 'SET' : 'NOT SET');
-
 connectDB();
 
 const app = express();
